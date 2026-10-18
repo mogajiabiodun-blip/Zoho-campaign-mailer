@@ -1,0 +1,44 @@
+services:
+  # Backend API + scheduler + IMAP poller (needs a persistent disk for SQLite)
+  - type: web
+    name: zoho-mailer-api
+    runtime: node
+    plan: starter
+    region: oregon
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: mailer-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /var/data/campaigns.db
+      - key: IMAP_POLL_MINUTES
+        value: "15"
+      - key: PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: zoho-mailer-api
+          envVarKey: RENDER_EXTERNAL_URL
+
+  # Frontend (static React build)
+  - type: web
+    name: zoho-mailer-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Set this to the backend service URL (e.g. https://zoho-mailer-api.onrender.com)
+      # after the backend is created, then trigger a redeploy so the static build picks it up.
+      - key: VITE_BACKEND_URL
+        sync: false

@@ -1,0 +1,20 @@
+{
+  "name": "zoho-campaign-mailer-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "imapflow": "^1.0.186",
+    "nodemailer": "^6.9.16",
+    "uuid": "^11.0.5"
+  }
+}

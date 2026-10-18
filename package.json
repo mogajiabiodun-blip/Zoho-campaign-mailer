@@ -1,0 +1,7 @@
+{
+  "name": "zoho-campaign-mailer",
+  "private": true,
+  "scripts": {
+    "dev": "bash start.sh"
+  }
+}
